@@ -10,6 +10,7 @@
 		92296D611B86CDDA00FED746 /* Main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 92296D5C1B86CDDA00FED746 /* Main.cpp */; };
 		92296D621B86CDDA00FED746 /* Sha1.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 92296D5D1B86CDDA00FED746 /* Sha1.cpp */; };
 		92296D631B86CDDA00FED746 /* Timer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 92296D5F1B86CDDA00FED746 /* Timer.cpp */; };
+		B42A834D1D95DE89003FCB7A /* HashDictionary.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B42A834B1D95DE89003FCB7A /* HashDictionary.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -31,6 +32,8 @@
 		92296D5F1B86CDDA00FED746 /* Timer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Timer.cpp; sourceTree = SOURCE_ROOT; };
 		92296D601B86CDDA00FED746 /* Timer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Timer.h; sourceTree = SOURCE_ROOT; };
 		9295975A1A4E53A4005EB005 /* password-mac */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "password-mac"; sourceTree = BUILT_PRODUCTS_DIR; };
+		B42A834B1D95DE89003FCB7A /* HashDictionary.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HashDictionary.cpp; sourceTree = SOURCE_ROOT; };
+		B42A834C1D95DE89003FCB7A /* HashDictionary.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HashDictionary.h; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -64,6 +67,8 @@
 			isa = PBXGroup;
 			children = (
 				92296D5C1B86CDDA00FED746 /* Main.cpp */,
+				B42A834B1D95DE89003FCB7A /* HashDictionary.cpp */,
+				B42A834C1D95DE89003FCB7A /* HashDictionary.h */,
 				92296D5D1B86CDDA00FED746 /* Sha1.cpp */,
 				92296D5E1B86CDDA00FED746 /* Sha1.h */,
 				92296D5F1B86CDDA00FED746 /* Timer.cpp */,
@@ -98,7 +103,7 @@
 		929597521A4E53A4005EB005 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0720;
+				LastUpgradeCheck = 0800;
 				ORGANIZATIONNAME = "Sanjay Madhav";
 				TargetAttributes = {
 					929597591A4E53A4005EB005 = {
@@ -129,6 +134,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				92296D631B86CDDA00FED746 /* Timer.cpp in Sources */,
+				B42A834D1D95DE89003FCB7A /* HashDictionary.cpp in Sources */,
 				92296D621B86CDDA00FED746 /* Sha1.cpp in Sources */,
 				92296D611B86CDDA00FED746 /* Main.cpp in Sources */,
 			);
@@ -150,8 +156,10 @@
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
@@ -159,6 +167,7 @@
 				ENABLE_TESTABILITY = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
@@ -191,8 +200,10 @@
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = YES;
@@ -200,6 +211,7 @@
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
 				GCC_WARN_UNDECLARED_SELECTOR = YES;
