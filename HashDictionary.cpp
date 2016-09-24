@@ -11,12 +11,13 @@
 #include "Sha1.h"
 #include <string>
 #include <fstream>
+#include <tbb/parallel_invoke.h>
 
 HashDictionary::HashDictionary()
 {
     mHashMap = new std::unordered_map<std::string, std::string>();
     mHashMap->rehash(100000); //performance boost
-    mDecryptedMap = new std::map<int, std::pair<std::string, std::string> >();
+    mDecryptedMap = new tbb::concurrent_unordered_map<int, std::pair<std::string, std::string> >();
     mFoundMap = new std::map<int, std::pair<std::string, std::string>* >();
     mUnsolvedPasswords = new std::vector<std::pair<int, std::string> >();
 }
@@ -88,19 +89,54 @@ void HashDictionary::DecryptDictionary(std::istream &passwordsFile)
         }
         count++;
     }
-    BruteForce();
+    
+    const int   start1[]    = {0,0,0,0},
+                end1[]      = {3,35,35,35},
+                start2[]    = {3,0,0,0},
+                end2[]      = {7,35,35,35},
+                start3[]    = {7,0,0,0},
+                end3[]      = {11,35,35,35},
+                start4[]    = {11,0,0,0},
+                end4[]      = {15,35,35,35},
+                start5[]    = {15,0,0,0},
+                end5[]      = {19,35,35,35},
+                start6[]    = {19,0,0,0},
+                end6[]      = {23,35,35,35},
+                start7[]    = {23,0,0,0},
+                end7[]      = {27,35,35,35},
+                start8[]    = {27,0,0,0},
+                end8[]      = {31,35,35,35},
+                start9[]    = {31,0,0,0},
+                end9[]      = {35,35,35,35};
+    
+    tbb::parallel_invoke(
+                         [this, start1, end1] {BruteForce(start1, end1); },
+                         [this, start2, end2] {BruteForce(start2, end2); },
+                         [this, start3, end3] {BruteForce(start3, end3); },
+                         [this, start4, end4] {BruteForce(start4, end4); },
+                         [this, start5, end5] {BruteForce(start5, end5); },
+                         [this, start6, end6] {BruteForce(start6, end6); },
+                         [this, start7, end7] {BruteForce(start7, end7); },
+                         [this, start8, end8] {BruteForce(start8, end8); },
+                         [this, start9, end9] {BruteForce(start9, end9); }
+                         );
 }
 
-void HashDictionary::BruteForce()
+void HashDictionary::BruteForce(const int start[4], const int end[4])
 {
     int count;
-    int temp = 0;
+    int length = 0;
     std::string hashedPassword;
-    int countingMachine[4] = {0,0,0,0};
+    int countingMachine[4];
     char passwordAttempt[4] = {'\0', '\0', '\0', '\0'};
     unsigned char hash[20];
     char hex_str[41];
     Timer timer;
+    
+    countingMachine[0] = start[0];
+    countingMachine[1] = start[1];
+    countingMachine[2] = start[2];
+    countingMachine[3] = start[3];
     
     timer.start();
     for(auto it = mUnsolvedPasswords->begin(); it != mUnsolvedPasswords->end(); ++it)
@@ -108,14 +144,13 @@ void HashDictionary::BruteForce()
         count = it->first;
         hashedPassword = it->second;
     
-        int length = 0;
+        length = 0;
         
         while(countingMachine[0] != 36 && length < 4)
         {
             countingMachine[length] += 1;
             if(countingMachine[length] == 36)
             {
-                temp = countingMachine[0];
                 for(int i = length; i > 0; --i)
                 {
                     if(countingMachine[i] != 36)

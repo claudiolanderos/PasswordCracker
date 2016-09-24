@@ -11,6 +11,7 @@
 #include <unordered_map>
 #include <vector>
 #include <map>
+#include <tbb/concurrent_unordered_map.h>
 
 class HashDictionary
 {
@@ -29,7 +30,7 @@ public:
     
 private:
     
-    void BruteForce();
+    void BruteForce(const int start[4], const int end[4]);
     
     char countingMachineArray[37] = {'a', 'b', 'c', 'd', 'e', 'f',
                                         'g', 'h', 'i', 'j', 'k', 'l',
@@ -38,7 +39,7 @@ private:
                                         'y', 'z', '0', '1', '2', '3',
                                         '4', '5', '6', '7', '8', '9'};
     std::vector<std::pair<int, std::string> > *mUnsolvedPasswords;
-    std::map<int, std::pair<std::string, std::string> > *mDecryptedMap;
+    tbb::concurrent_unordered_map<int, std::pair<std::string, std::string> > *mDecryptedMap;
     std::map<int, std::pair<std::string, std::string>*> *mFoundMap;
     std::unordered_map<std::string, std::string> *mHashMap;
 };
