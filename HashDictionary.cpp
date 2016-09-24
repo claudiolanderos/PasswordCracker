@@ -95,31 +95,26 @@ void HashDictionary::DecryptDictionary(std::istream &passwordsFile)
     }
     
     const int   start1[]    = {0,0,0,0},
-    end1[]      = {3,35,35,35};
-    
-    BruteForce(start1,end1);
-    
-    /*
-    const int   start1[]    = {0,0,0,0},
                 end1[]      = {3,35,35,35},
-                start2[]    = {3,0,0,0},
+                start2[]    = {4,0,0,0},
                 end2[]      = {7,35,35,35},
-                start3[]    = {7,0,0,0},
+                start3[]    = {8,0,0,0},
                 end3[]      = {11,35,35,35},
-                start4[]    = {11,0,0,0},
+                start4[]    = {12,0,0,0},
                 end4[]      = {15,35,35,35},
-                start5[]    = {15,0,0,0},
+                start5[]    = {16,0,0,0},
                 end5[]      = {19,35,35,35},
-                start6[]    = {19,0,0,0},
+                start6[]    = {20,0,0,0},
                 end6[]      = {23,35,35,35},
-                start7[]    = {23,0,0,0},
+                start7[]    = {24,0,0,0},
                 end7[]      = {27,35,35,35},
-                start8[]    = {27,0,0,0},
+                start8[]    = {28,0,0,0},
                 end8[]      = {31,35,35,35},
-                start9[]    = {31,0,0,0},
+                start9[]    = {32,0,0,0},
                 end9[]      = {35,35,35,35};
     
-    
+    Timer timer;
+    timer.start();
     tbb::parallel_invoke(
                          [this, start1, end1] {BruteForce(start1, end1); },
                          [this, start2, end2] {BruteForce(start2, end2); },
@@ -130,28 +125,26 @@ void HashDictionary::DecryptDictionary(std::istream &passwordsFile)
                          [this, start7, end7] {BruteForce(start7, end7); },
                          [this, start8, end8] {BruteForce(start8, end8); },
                          [this, start9, end9] {BruteForce(start9, end9); }
-                         );*/
+                         );
+    double elapsed = timer.getElapsed();
+    std::cout<<"Time elapsed brute forcing: " << elapsed << std::endl;
 }
 
 void HashDictionary::BruteForce(const int start[4], const int end[4])
 {
     int length = 0;
     std::string hashedPassword;
-    int countingMachine[4] = {0,0,0,0};
+    int countingMachine[4];
     char passwordAttempt[4] = {'\0', '\0', '\0', '\0'};
     unsigned char hash[20];
     char hex_str[41];
-    Timer timer;
     
-    /*
     countingMachine[0] = start[0];
     countingMachine[1] = start[1];
     countingMachine[2] = start[2];
     countingMachine[3] = start[3];
-    */
     
-    timer.start();
-    while(countingMachine[0] != 36 && length < 4)
+    while(countingMachine[0] != (end[0])+1 && length < 4)
     {
         countingMachine[length] += 1;
         if(countingMachine[length] == 36)
@@ -165,12 +158,12 @@ void HashDictionary::BruteForce(const int start[4], const int end[4])
                 countingMachine[i] = 0;
                 countingMachine[i-1] += 1;
             }
-            if(countingMachine[0] == 36)
+            if(countingMachine[0] == (end[0])+1)
             {
                 for(int i = 0; i < 4; ++i)
                 {
                     passwordAttempt[i] = '\0';
-                    countingMachine[1] = 0;
+                    countingMachine[i] = 0;
                 }
                 ++length;
                 countingMachine[0] = 0;
@@ -198,6 +191,4 @@ void HashDictionary::BruteForce(const int start[4], const int end[4])
             }
         }
     }
-    double elapsed = timer.getElapsed();
-    std::cout<<"Time elapsed brute forcing: " << elapsed << std::endl;
 }
