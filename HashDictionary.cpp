@@ -129,6 +129,7 @@ void HashDictionary::BruteForce()
                     for(int i = 0; i < 4; ++i)
                     {
                         passwordAttempt[i] = '\0';
+                        countingMachine[1] = 0;
                     }
                     ++length;
                     countingMachine[0] = 0;
@@ -149,7 +150,7 @@ void HashDictionary::BruteForce()
             std::string temp = std::string(hex_str);
             if(std::string(hex_str) == hashedPassword) //found!
             {
-                mDecryptedMap->operator[](count) = std::make_pair(it->second, std::string(passwordAttempt));
+                mDecryptedMap->operator[](count) = std::make_pair(it->second, std::string(passwordAttempt, length+1));
                 std::cout<<"BLAC: " << mDecryptedMap->find(count)->second.first << "," << mDecryptedMap->find(count)->second.second << std::endl;
 
             }
