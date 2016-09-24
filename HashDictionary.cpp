@@ -155,8 +155,7 @@ void HashDictionary::BruteForce()
 
             }
         }
-        
-        double elapsed = timer.getElapsed();
-        std::cout<<"Time elapsed brute forcing: " << elapsed << std::endl;
     }
+    double elapsed = timer.getElapsed();
+    std::cout<<"Time elapsed brute forcing: " << elapsed << std::endl;
 }
