@@ -41,12 +41,16 @@ void HashDictionary::PrintPasswords(std::string path)
         return;
     }
     
-    for(auto it = mDecryptedMap->begin(); it != mDecryptedMap->end(); it++)
+    for(int count = 0; count < mDecryptedMap->size(); ++count)
     {
-        output << it->second.first;
-        output << ",";
-        output << it->second.second;
-        output << "\n";
+        auto it = mDecryptedMap->find(count);
+        if(it != mDecryptedMap->end())
+        {
+            output << it->second.first;
+            output << ",";
+            output << it->second.second;
+            output << "\n";
+        }
     }
     output.close();
 }
@@ -91,6 +95,12 @@ void HashDictionary::DecryptDictionary(std::istream &passwordsFile)
     }
     
     const int   start1[]    = {0,0,0,0},
+    end1[]      = {3,35,35,35};
+    
+    BruteForce(start1,end1);
+    
+    /*
+    const int   start1[]    = {0,0,0,0},
                 end1[]      = {3,35,35,35},
                 start2[]    = {3,0,0,0},
                 end2[]      = {7,35,35,35},
@@ -109,6 +119,7 @@ void HashDictionary::DecryptDictionary(std::istream &passwordsFile)
                 start9[]    = {31,0,0,0},
                 end9[]      = {35,35,35,35};
     
+    
     tbb::parallel_invoke(
                          [this, start1, end1] {BruteForce(start1, end1); },
                          [this, start2, end2] {BruteForce(start2, end2); },
@@ -119,75 +130,71 @@ void HashDictionary::DecryptDictionary(std::istream &passwordsFile)
                          [this, start7, end7] {BruteForce(start7, end7); },
                          [this, start8, end8] {BruteForce(start8, end8); },
                          [this, start9, end9] {BruteForce(start9, end9); }
-                         );
+                         );*/
 }
 
 void HashDictionary::BruteForce(const int start[4], const int end[4])
 {
-    int count;
     int length = 0;
     std::string hashedPassword;
-    int countingMachine[4];
+    int countingMachine[4] = {0,0,0,0};
     char passwordAttempt[4] = {'\0', '\0', '\0', '\0'};
     unsigned char hash[20];
     char hex_str[41];
     Timer timer;
     
+    /*
     countingMachine[0] = start[0];
     countingMachine[1] = start[1];
     countingMachine[2] = start[2];
     countingMachine[3] = start[3];
+    */
     
     timer.start();
-    for(auto it = mUnsolvedPasswords->begin(); it != mUnsolvedPasswords->end(); ++it)
+    while(countingMachine[0] != 36 && length < 4)
     {
-        count = it->first;
-        hashedPassword = it->second;
-    
-        length = 0;
-        
-        while(countingMachine[0] != 36 && length < 4)
+        countingMachine[length] += 1;
+        if(countingMachine[length] == 36)
         {
-            countingMachine[length] += 1;
-            if(countingMachine[length] == 36)
+            for(int i = length; i > 0; --i)
             {
-                for(int i = length; i > 0; --i)
+                if(countingMachine[i] != 36)
                 {
-                    if(countingMachine[i] != 36)
-                    {
-                        break;
-                    }
-                    countingMachine[i] = 0;
-                    countingMachine[i-1] += 1;
+                    break;
                 }
-                if(countingMachine[0] == 36)
+                countingMachine[i] = 0;
+                countingMachine[i-1] += 1;
+            }
+            if(countingMachine[0] == 36)
+            {
+                for(int i = 0; i < 4; ++i)
                 {
-                    for(int i = 0; i < 4; ++i)
-                    {
-                        passwordAttempt[i] = '\0';
-                        countingMachine[1] = 0;
-                    }
-                    ++length;
-                    countingMachine[0] = 0;
-                    if(length == 4)
-                    {
-                        break;
-                    }
+                    passwordAttempt[i] = '\0';
+                    countingMachine[1] = 0;
+                }
+                ++length;
+                countingMachine[0] = 0;
+                if(length == 4)
+                {
+                    length = 0;
+                    break;
                 }
             }
+        }
 
-            
-            for(int i = 0; i <= length; ++i)
+        
+        for(int i = 0; i <= length; ++i)
+        {
+            passwordAttempt[i] = countingMachineArray[countingMachine[i]];
+        }
+        sha1::calc(passwordAttempt, length+1, hash);
+        sha1::toHexString(hash, hex_str);
+        
+        for(auto it = mUnsolvedPasswords->begin(); it != mUnsolvedPasswords->end(); ++it)
+        {
+            if((*it).second == std::string(hex_str))
             {
-                passwordAttempt[i] = countingMachineArray[countingMachine[i]];
-            }
-            sha1::calc(passwordAttempt, length+1, hash);
-            sha1::toHexString(hash, hex_str);
-            std::string temp = std::string(hex_str);
-            if(std::string(hex_str) == hashedPassword) //found!
-            {
-                mDecryptedMap->operator[](count) = std::make_pair(it->second, std::string(passwordAttempt, length+1));
-
+                mDecryptedMap->operator[]((*it).first) = std::make_pair((*it).second, std::string(passwordAttempt, length+1));
             }
         }
     }
