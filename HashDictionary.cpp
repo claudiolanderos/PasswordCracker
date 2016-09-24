@@ -84,7 +84,6 @@ void HashDictionary::DecryptDictionary(std::istream &passwordsFile)
         }
         else{
             mDecryptedMap->operator[](count) = std::make_pair(hashedPassword, it->second);
-            std::cout<<mDecryptedMap->find(count)->second.first << "," << mDecryptedMap->find(count)->second.second << std::endl;
             mFoundMap->operator[](count) = &mDecryptedMap->find(count)->second;     //can be improved
         }
         count++;
@@ -101,7 +100,9 @@ void HashDictionary::BruteForce()
     char passwordAttempt[4] = {'\0', '\0', '\0', '\0'};
     unsigned char hash[20];
     char hex_str[41];
+    Timer timer;
     
+    timer.start();
     for(auto it = mUnsolvedPasswords->begin(); it != mUnsolvedPasswords->end(); ++it)
     {
         count = it->first;
@@ -151,9 +152,11 @@ void HashDictionary::BruteForce()
             if(std::string(hex_str) == hashedPassword) //found!
             {
                 mDecryptedMap->operator[](count) = std::make_pair(it->second, std::string(passwordAttempt, length+1));
-                std::cout<<"BLAC: " << mDecryptedMap->find(count)->second.first << "," << mDecryptedMap->find(count)->second.second << std::endl;
 
             }
         }
+        
+        double elapsed = timer.getElapsed();
+        std::cout<<"Time elapsed brute forcing: " << elapsed << std::endl;
     }
 }
